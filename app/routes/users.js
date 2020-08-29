@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 const router  =new Router({prefix:'/users'});
-const {find, create, update,delete:del} = require('../controllers/users')
+const {find,findById, create, update,delete:del} = require('../controllers/users')
 console.log(router);
 
 router.get('/',async (ctx,next) =>{
@@ -8,7 +8,7 @@ router.get('/',async (ctx,next) =>{
 });
 
 router.get('/:id',async (ctx,next) =>{
-    return await find(ctx);
+    return await findById(ctx);
 });
 
 
