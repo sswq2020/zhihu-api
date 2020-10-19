@@ -3,13 +3,14 @@
  * @author sswq
  */
 
-
-const jsonwebtoken = require('jsonwebtoken') // 这个和koa-jwt完全不同的库
+ /***这个和koa-jwt完全不同的库**/ 
+const jsonwebtoken = require('jsonwebtoken')
+const jwt = require('koa-jwt');
 const {secret} = require('../config')
-
+ 
 
 /**
- * @description 验证是否登录中间件
+ * @description 验证是否登录中间件方法一
  * @param {Object} ctx 
  * @param {Function} next 
  */
@@ -26,6 +27,13 @@ const auth = async (ctx,next) => {
 }
 
 /**
+ * @description 验证是否登录中间件方法二
+ * @param {Object} ctx 
+ * @param {Function} next 
+ */
+const authByJwt = jwt({secret});
+
+/**
  * @description 验证是否是本人中间件
  * @param {Object} ctx 
  * @param {Function} next 
@@ -40,5 +48,6 @@ const checkOwner = async (ctx,next) => {
 
 module.exports = {
     auth,
-    checkOwner
+    checkOwner,
+    authByJwt   
 }

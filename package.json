@@ -17,7 +17,8 @@
     "koa-json-error": "^3.1.2",
     "koa-parameter": "^3.0.1",
     "koa-router": "^9.1.0",
-    "mongoose": "^5.9.27"
+    "mongoose": "^5.9.27",
+    "koa-jwt":"^4.0.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.2",

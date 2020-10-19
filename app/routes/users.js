@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 
-const {auth,checkOwner} = require('../middleware')
+const {auth,checkOwner,authByJwt} = require('../middleware')
 const router = new Router({ prefix: '/users' });
 const { 
     login,
@@ -16,7 +16,7 @@ router.get('/', async (ctx, next) => {
     return await find(ctx);
 });
 
-router.get('/:id', async (ctx, next) => {
+router.get('/:id', async (ctx, next) => { 
     return await findById(ctx);
 });
 
@@ -24,11 +24,11 @@ router.post('/', async (ctx, next) => {
     return await create(ctx);
 });
 
-router.patch('/:id',auth,checkOwner, async (ctx, next) => {
+router.patch('/:id',authByJwt,checkOwner, async (ctx, next) => {
     return await update(ctx);
 });
 
-router.delete('/:id',auth,checkOwner, async (ctx, next) => {
+router.delete('/:id',authByJwt,checkOwner, async (ctx, next) => {
     return await del(ctx);
 });
 
