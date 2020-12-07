@@ -8,7 +8,12 @@ class UserCtl{
     }
 
     async findById(ctx){
-        const user = await User.findById(ctx.params.id);
+        const {fields} = ctx.query;
+        console.log("====================");
+        console.log(fields);
+        console.log("====================");
+        const selectFields = fields.split(';').filter(f => f).map(f => ' +' + f).join('');
+        const user = await User.findById(ctx.params.id).select(selectFields); // http://www.mongoosejs.net/docs/api.html#query_Query-select
         if(!user) {ctx.throw(404,'用户不存在')};
         ctx.body = user;
     }
