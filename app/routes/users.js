@@ -8,7 +8,9 @@ const {
     findById,
     create,
     update,
-    delete: del } = require('../controllers/users')
+    delete: del,
+    follow, 
+    listFollowing} = require('../controllers/users')
 console.log(router);
 
 
@@ -34,8 +36,11 @@ router.delete('/:id',authByJwt,checkOwner, async (ctx, next) => {
 
 router.post('/login',login);
 
+router.get('/:id/following',authByJwt,checkOwner,async (ctx, next) => {
+    return await listFollowing(ctx);
+})
 
-
-
-
+router.put('/following/:id',authByJwt, async (ctx, next) => {
+    return await follow(ctx);
+})
 module.exports = router;
