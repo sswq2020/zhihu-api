@@ -10,6 +10,8 @@ const {
     update,
     delete: del,
     follow, 
+    unfollow,
+    listFollowers,
     listFollowing} = require('../controllers/users')
 console.log(router);
 
@@ -42,5 +44,13 @@ router.get('/:id/following',authByJwt,checkOwner,async (ctx, next) => {
 
 router.put('/following/:id',authByJwt, async (ctx, next) => {
     return await follow(ctx);
+})
+
+router.delete('/following/:id',authByJwt,async (ctx,next) =>{
+    return await unfollow(ctx);
+})
+
+router.get('/:id/followers',async (ctx, next) => {
+    return await listFollowers(ctx);
 })
 module.exports = router;

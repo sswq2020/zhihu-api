@@ -4,7 +4,7 @@ const {secret} = require('../config')
 
 class UserCtl{
     async find(ctx){
-        ctx.body = await User.find();
+        ctx.body = await User.find().select('+following');
     }
 
     async findById(ctx){
@@ -83,6 +83,12 @@ class UserCtl{
         ctx.body = user.following;
     }
 
+
+    async listFollowers(ctx){
+        const user =  await User.find({following:ctx.params.id});
+        ctx.body = user;     
+    }
+
     async follow(ctx){
         const me = await User.findById(ctx.state.user._id).select('+following')
         if(!me.following.map(id => id.toString()).includes(ctx.params.id)){
@@ -90,6 +96,16 @@ class UserCtl{
             me.save();
         }
          ctx.status = 204;    
+    }
+
+    async unfollow(ctx){
+        const me = await User.findById(ctx.state.user._id).select('+following')
+        const index = me.following.findIndex(id => id.toString() === ctx.params.id)
+        if(index > -1)  {
+            me.following.splice(index,1);
+            me.save();
+        }
+         ctx.status = 204;            
     }
 }
 
