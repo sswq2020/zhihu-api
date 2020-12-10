@@ -107,6 +107,16 @@ class UserCtl{
         }
          ctx.status = 204;            
     }
+
+     async checkUserExit(ctx,next) {
+       const user = await User.findById(ctx.params.id);
+       if(!user){
+          ctx.throw(404,'没有该用户');
+       }
+       await next();
+    }
+
+
 }
 
 module.exports = new UserCtl();
