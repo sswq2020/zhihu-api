@@ -4,6 +4,7 @@ const {secret} = require('../config')
 
 class UserCtl{
     async find(ctx){
+        debugger
         ctx.body = await User.find().select('+following');
     }
 
