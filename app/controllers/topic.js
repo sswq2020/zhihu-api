@@ -3,7 +3,13 @@ const Topic = require('../models/topic');
 
 class TopicCtl{
    async find(ctx){
-       ctx.body = await Topic.find();
+    const {per_page = 10, page = 1} = ctx.query;
+    const count =  Math.max(per_page * 1, 1);
+    const skipCount = (Math.max(page * 1, 1) - 1) * count;
+    ctx.body = await Topic
+    .find()
+    .limit(count)
+    .skip(skipCount);
    }
 
    async findById(ctx){

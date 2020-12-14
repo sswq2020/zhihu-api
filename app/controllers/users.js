@@ -4,8 +4,13 @@ const {secret} = require('../config')
 
 class UserCtl{
     async find(ctx){
-        debugger
-        ctx.body = await User.find().select('+following');
+        const {per_page = 10, page = 1} = ctx.query;
+        const count =  Math.max(per_page * 1, 1);
+        const skipCount = (Math.max(page * 1, 1) - 1) * count;
+        ctx.body = await User
+        .find()
+        .limit(count)
+        .skip(skipCount);
     }
 
     async findById(ctx){
