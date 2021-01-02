@@ -3,11 +3,11 @@ const Topic = require('../models/topic');
 
 class TopicCtl{
    async find(ctx){
-    const {per_page = 10, page = 1} = ctx.query;
+    const {per_page = 10, page = 1,q} = ctx.query;
     const count =  Math.max(per_page * 1, 1);
     const skipCount = (Math.max(page * 1, 1) - 1) * count;
     ctx.body = await Topic
-    .find()
+    .find({name:new RegExp(q)})
     .limit(count)
     .skip(skipCount);
    }

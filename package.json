@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "pro": "cross-env NODE_ENV=production node app",
-    "dev": "cross-env NODE_ENV=dev ./node_modules/.bin/nodemon --inspect=9229 app"
+    "dev": "cross-env NODE_ENV=dev node app"
   },
   "author": "sswq",
   "license": "ISC",
