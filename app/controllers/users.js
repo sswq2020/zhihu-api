@@ -100,7 +100,6 @@ class UserCtl{
         ctx.body = user.following;
     }
 
-
     async listFollowers(ctx){
         const user =  await User.find({following:ctx.params.id});
         ctx.body = user;     
@@ -125,15 +124,40 @@ class UserCtl{
          ctx.status = 204;            
     }
 
-     async checkUserExit(ctx,next) {
+    async followTopic(ctx){
+        const me = await User.findById(ctx.state.user._id).select('+followingTopics')
+        if(!me.followingTopics.map(id => id.toString()).includes(ctx.params.id)){
+            me.followingTopics.push(ctx.params.id);
+            me.save();
+        }
+         ctx.status = 204;    
+    }
+
+    async unfollowTopic(ctx){
+        const me = await User.findById(ctx.state.user._id).select('+followingTopics')
+        const index = me.followingTopics.findIndex(id => id.toString() === ctx.params.id)
+        if(index > -1)  {
+            me.followingTopics.splice(index,1);
+            me.save();
+        }
+         ctx.status = 204;            
+    }
+
+    async userFollowingTopic(ctx){
+        const user =  await User.findById(ctx.params.id).select('+followingTopics').populate('followingTopics');
+        if(!user){
+            ctx.throw(404,'用户不存在');
+        } 
+        ctx.body = user.followingTopics;
+    }
+
+    async checkUserExit(ctx,next) {
        const user = await User.findById(ctx.params.id);
        if(!user){
           ctx.throw(404,'没有该用户');
        }
        await next();
     }
-
-
 }
 
 module.exports = new UserCtl();

@@ -10,10 +10,16 @@ const {
     update,
     delete: del,
     follow, 
+    followTopic,
     checkUserExit,
     unfollow,
+    unfollowTopic,
     listFollowers,
-    listFollowing} = require('../controllers/users')
+    listFollowing,
+    userFollowingTopic
+} = require('../controllers/users')
+
+ const {checkTopicExit} = require('../controllers/topic')    
 console.log(router);
 
 
@@ -39,15 +45,18 @@ router.delete('/:id',authByJwt,checkOwner, async (ctx, next) => {
 
 router.post('/login',login);
 
-router.get('/:id/following',authByJwt,checkOwner,async (ctx, next) => {
-    return await listFollowing(ctx);
-})
-
 router.put('/following/:id',authByJwt,checkUserExit,follow)
 
 router.delete('/following/:id',authByJwt,checkUserExit,unfollow)
 
-router.get('/:id/followers',async (ctx, next) => {
-    return await listFollowers(ctx);
-})
+router.put('/followingTopics/:id',authByJwt,checkTopicExit,followTopic)
+
+router.delete('/followingTopics/:id',authByJwt,checkTopicExit,unfollowTopic)
+
+router.get('/:id/following',authByJwt,listFollowing)
+
+router.get('/:id/followers',authByJwt,listFollowers);
+
+router.get('/:id/followingTopics',authByJwt,userFollowingTopic)
+
 module.exports = router;
