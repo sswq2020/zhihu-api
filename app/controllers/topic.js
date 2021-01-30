@@ -1,5 +1,6 @@
 const jsonwebtoken = require('jsonwebtoken');
 const Topic = require('../models/topic');
+const User = require('../models/users');
 
 class TopicCtl {
     async find(ctx) {
@@ -57,6 +58,15 @@ class TopicCtl {
         }
         await next();
      }
+
+     /**
+      * @description 某个话题下,所有关注者
+      * @param {obj} ctx 
+      */
+     async topicListFollowers(ctx){
+        const user =  await User.find({followingTopics:ctx.params.id});
+        ctx.body = user;     
+    }
 
 }
 

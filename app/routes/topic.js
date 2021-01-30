@@ -7,24 +7,20 @@ const {
     findById,
     create,
     update,
+    topicListFollowers,
+    checkTopicExit
 } = require('../controllers/topic')
 console.log(router);
 
 
-router.get('/', async (ctx, next) => {
-    return await find(ctx);
-});
+router.get('/', find);
 
-router.get('/:id', async (ctx, next) => { 
-    return await findById(ctx);
-});
+router.get('/:id', findById);
 
-router.post('/',authByJwt, async (ctx, next) => {
-    return await create(ctx);
-});
+router.post('/',authByJwt,create);
 
-router.patch('/:id', authByJwt, async (ctx, next) => {
-    return await update(ctx);
-});
+router.patch('/:id', authByJwt,checkTopicExit, update);
+
+router.get('/:id/followers',authByJwt,checkTopicExit,topicListFollowers);
 
 module.exports = router;
