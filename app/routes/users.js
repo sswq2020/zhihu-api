@@ -16,12 +16,11 @@ const {
     unfollowTopic,
     listFollowers,
     listFollowing,
-    userFollowingTopic
+    userFollowingTopic,
+    listQuestions
 } = require('../controllers/users')
 
  const {checkTopicExit} = require('../controllers/topic')    
-console.log(router);
-
 
 router.get('/', async (ctx, next) => {
     return await find(ctx);
@@ -58,5 +57,7 @@ router.get('/:id/following',authByJwt,listFollowing)
 router.get('/:id/followers',authByJwt,listFollowers);
 
 router.get('/:id/followingTopics',authByJwt,userFollowingTopic)
+
+router.get('/:id/questionlist',listQuestions)
 
 module.exports = router;

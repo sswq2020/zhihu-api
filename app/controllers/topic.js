@@ -1,4 +1,3 @@
-const jsonwebtoken = require('jsonwebtoken');
 const Topic = require('../models/topic');
 const User = require('../models/users');
 
@@ -33,7 +32,6 @@ class TopicCtl {
             return
         }
 
-
         const topic = await new Topic(ctx.request.body).save();
         ctx.body = topic;
     }
@@ -44,7 +42,7 @@ class TopicCtl {
             avatar_url: { type: 'string', required: false },
             introduction: { type: 'string', required: false, select: false }
         })
-        const topic = await Topic.findByIdAndUpdate(ctx.params.id, ctx.request.body);
+        const topic = await ctx.state.topic.update(ctx.request.body);
         if (!topic) {
             if (!topic) { ctx.throw(404, '话题不存在') };
         }
@@ -56,6 +54,7 @@ class TopicCtl {
         if(!topic){
            ctx.throw(404,'没有该话题');
         }
+        ctx.state.topic = topic;
         await next();
      }
 

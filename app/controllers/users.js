@@ -1,5 +1,6 @@
 const jsonwebtoken = require('jsonwebtoken');
 const User = require('../models/users');
+const Question = require('../models/question');
 const {secret} = require('../config')
 
 class UserCtl{
@@ -158,6 +159,16 @@ class UserCtl{
        }
        await next();
     }
+
+    /**
+     * @description 获取用户下的问题列表
+     * @param {*} ctx 
+     */
+    async listQuestions(ctx){
+        const questions = await Question.find({questioner:ctx.params.id});
+        ctx.body = questions;
+    }
+
 }
 
 module.exports = new UserCtl();
