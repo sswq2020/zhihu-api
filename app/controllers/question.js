@@ -80,20 +80,20 @@ class QuestionCtl {
         if (!question) {
             ctx.throw(404, '问题不存在');
         }
-        ctx.body = question;
+        ctx.status = 204;
     }
 
     /**
-     * @description 更新问题
+     * @description 删除问题
      * @param {Object} ctx
      * @param {Function} next
      */
     async delete(ctx) {
-        const user = await User.findByIdAndRemove(ctx.params.id);
-        if (!user) {
-            if (!user) { ctx.throw(404, '用户不存在') };
+        const question = await Question.findByIdAndRemove(ctx.params.id);
+        if (!question) {
+           ctx.throw(404, '问题不存在') ;
         }
-        ctx.body = user;
+        ctx.status = 204;
     }
 
     /**
