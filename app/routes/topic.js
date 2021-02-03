@@ -2,13 +2,14 @@ const Router = require('koa-router');
 
 const {authByJwt} = require('../middleware')
 const router = new Router({ prefix: '/topics' });
-const { 
+const {
     find,
     findById,
     create,
     update,
     topicListFollowers,
-    checkTopicExit
+    checkTopicExit,
+    questListByTopics
 } = require('../controllers/topic')
 console.log(router);
 
@@ -23,4 +24,5 @@ router.patch('/:id', authByJwt,checkTopicExit, update);
 
 router.get('/:id/followers',authByJwt,checkTopicExit,topicListFollowers);
 
+router.get('/:id/questions',authByJwt,checkTopicExit,questListByTopics);
 module.exports = router;

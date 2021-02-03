@@ -41,8 +41,7 @@ class QuestionCtl {
     async findById(ctx) {
         const { fields = '' } = ctx.query;
         const selectFields = fields.split(';').filter(f => f).map(f => ' +' + f).join('');
-        const cc = await Question.findById(ctx.params.id).select(selectFields).populate('questioner');
-        console.log(cc);
+        const cc = await Question.findById(ctx.params.id).select(selectFields).populate('questioner topics');
         ctx.body = cc;
     }
     /**
