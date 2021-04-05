@@ -1,6 +1,7 @@
 const jsonwebtoken = require('jsonwebtoken');
 const User = require('../models/users');
 const Question = require('../models/question');
+const Answer = require('../models/answer');
 const {secret} = require('../config')
 
 class UserCtl{
@@ -84,7 +85,7 @@ class UserCtl{
             name:{type:'string',required:false},
             password:{type:'string',required:false}
         })
-        
+
         const user = await User.findOne(ctx.request.body);
         if(!user){ctx.throw(401,'用户名或密码不正确')}
         const {_id,name} = user;
@@ -97,13 +98,13 @@ class UserCtl{
         const user =  await User.findById(ctx.params.id).select('+following').populate('following');
         if(!user){
             ctx.throw(404);
-        } 
+        }
         ctx.body = user.following;
     }
 
     async listFollowers(ctx){
         const user =  await User.find({following:ctx.params.id});
-        ctx.body = user;     
+        ctx.body = user;
     }
 
     async follow(ctx){
@@ -112,7 +113,7 @@ class UserCtl{
             me.following.push(ctx.params.id);
             me.save();
         }
-         ctx.status = 204;    
+         ctx.status = 204;
     }
 
     async unfollow(ctx){
@@ -122,7 +123,7 @@ class UserCtl{
             me.following.splice(index,1);
             me.save();
         }
-         ctx.status = 204;            
+         ctx.status = 204;
     }
 
     async followTopic(ctx){
@@ -131,7 +132,7 @@ class UserCtl{
             me.followingTopics.push(ctx.params.id);
             me.save();
         }
-         ctx.status = 204;    
+         ctx.status = 204;
     }
 
     async unfollowTopic(ctx){
@@ -141,17 +142,22 @@ class UserCtl{
             me.followingTopics.splice(index,1);
             me.save();
         }
-         ctx.status = 204;            
+         ctx.status = 204;
     }
 
     async userFollowingTopic(ctx){
         const user =  await User.findById(ctx.params.id).select('+followingTopics').populate('followingTopics');
         if(!user){
             ctx.throw(404,'用户不存在');
-        } 
+        }
         ctx.body = user.followingTopics;
     }
 
+    /**
+     * @description 检查用户是否存在
+     * @param {*} ctx
+     * @param {*} next
+     */
     async checkUserExit(ctx,next) {
        const user = await User.findById(ctx.params.id);
        if(!user){
@@ -162,11 +168,95 @@ class UserCtl{
 
     /**
      * @description 获取用户下的问题列表
-     * @param {*} ctx 
+     * @param {*} ctx
      */
     async listQuestions(ctx){
         const questions = await Question.find({questioner:ctx.params.id});
         ctx.body = questions;
+    }
+
+    /**
+     * @description 获取用户下的点赞的答案列表
+     * @param {*} ctx
+     */
+    async listlikingAnswers(ctx){
+        const user =  await User.findById(ctx.params.id).select('+likingAnswers').populate('likingAnswers');
+        if(!user){
+            ctx.throw(404);
+        }
+        ctx.body = user.likingAnswers;
+    }
+
+    /**
+     * @description 点赞答案
+     * @param {*} ctx
+     */
+    async likeAnswer(ctx,next){
+        const me =  await User.findById(ctx.state.user._id).select('+likingAnswers')
+       if(!me.likingAnswers.map(id => id.toString()).includes(ctx.params.id)){
+           me.likingAnswers.push(ctx.params.id);
+           me.save();
+            await Answer.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount: 1}});
+       };
+        ctx.status = 204;
+        await next();
+    }
+
+    /**
+     * @description 取消点赞答案
+     * @param {*} ctx
+     */
+    async unlikeAnswer(ctx){
+        const me =await User.findById(ctx.state.user._id).select('+likingAnswers');
+        console.log(me);
+
+        const index = me.likingAnswers.findIndex(id => id.toString() === ctx.params.id)
+        if(index > -1)  {
+            me.likingAnswers.splice(index,1);
+            me.save();
+            await Answer.findByIdAndUpdate(ctx.params.id,{$inc:{voteCount: -1}});
+        }
+         ctx.status = 204;
+    }
+
+    /**
+     * @description 获取用户下的踩的答案列表
+     * @param {*} ctx
+     */
+    async listdislikingAnswers(ctx){
+        const user =  await User.findById(ctx.params.id).select('+dislikingAnswers').populate('dislikingAnswers');
+        if(!user){
+            ctx.throw(404);
+        }
+        ctx.body = user.dislikingAnswers;
+    }
+
+    /**
+     * @description 用户睬答案
+     * @param {*} ctx
+     */
+    async dislikeAnswer(ctx,next){
+        const me =  await User.findById(ctx.state.user._id).select('+dislikingAnswers')
+       if(!me.dislikingAnswers.map(id => id.toString()).includes(ctx.params.id)){
+           me.dislikingAnswers.push(ctx.params.id);
+           me.save();
+       };
+        ctx.status = 204;
+        await next();
+    }
+
+    /**
+     * @description 用户取消睬答案
+     * @param {*} ctx
+     */
+    async undislikeAnswer(ctx){
+        const me = await User.findById(ctx.state.user._id).select('+dislikingAnswers')
+        const index = me.dislikingAnswers.findIndex(id => id.toString() === ctx.params.id)
+        if(index > -1)  {
+            me.dislikingAnswers.splice(index,1);
+            me.save();
+        }
+         ctx.status = 204;
     }
 
 }
