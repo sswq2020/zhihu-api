@@ -259,6 +259,47 @@ class UserCtl{
          ctx.status = 204;
     }
 
+    /**
+     * @description 收藏答案
+     * @param {*} ctx
+     */
+    async favorAnswer(ctx){
+        const me =  await User.findById(ctx.state.user._id).select('+favoritesAnswers')
+        if(!me.favoritesAnswers.map(id => id.toString()).includes(ctx.params.id)){
+            me.favoritesAnswers.push(ctx.params.id);
+            me.save();
+        };
+      ctx.status = 204;
+    }
+
+
+    /**
+     * @description 获取用户下的点赞的答案列表
+     * @param {*} ctx
+     */
+     async listfavoriteAnswers(ctx){
+        const user =  await User.findById(ctx.params.id).select('+favoritesAnswers').populate('favoritesAnswers');
+        if(!user){
+            ctx.throw(404);
+        }
+        ctx.body = user.favoritesAnswers;
+    }
+
+
+    /**
+     * @description 用户取消收藏答案
+     * @param {*} ctx
+     */
+    async cancelfavoritesAnswers(ctx){
+       const me = await User.findById(ctx.state.user._id).select('+favoritesAnswers')
+       const index = me.favoritesAnswers.findIndex(id => id.toString() === ctx.params.id)
+       if(index > -1)  {
+          me.favoritesAnswers.splice(index,1);
+          me.save();
+       }
+        ctx.status = 204;
+}
+
 }
 
 module.exports = new UserCtl();

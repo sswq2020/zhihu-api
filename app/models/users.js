@@ -43,6 +43,10 @@ const userSchema = new Schema({
     dislikingAnswers:{
         type:[{type:Schema.Types.ObjectId, ref:'Answer'}],
         select:false
+    },
+    favoritesAnswers:{
+        type:[{type:Schema.Types.ObjectId, ref:'Answer'}],
+        select:false
     }
 });
 

@@ -23,7 +23,10 @@ const {
     likeAnswer,
     dislikeAnswer,
     unlikeAnswer,
-    undislikeAnswer
+    undislikeAnswer,
+    favorAnswer,
+    listfavoriteAnswers,
+    cancelfavoritesAnswers
 } = require('../controllers/users')
 
  const {checkTopicExit} = require('../controllers/topic')
@@ -79,6 +82,14 @@ router.get('/:id/dislikingAnswersList',listdislikingAnswers)
 router.put('/dislikeAnswer/:id',authByJwt,checkAnswerExit,dislikeAnswer,unlikeAnswer)
 
 router.delete('/dislikeAnswer/:id',authByJwt,checkAnswerExit,undislikeAnswer)
+
+
+router.get('/:id/favoriteAnswersList',listfavoriteAnswers)
+
+router.put('/favorAnswer/:id',authByJwt,checkAnswerExit,favorAnswer)
+
+router.delete('/favorAnswer/:id',authByJwt,checkAnswerExit,cancelfavoritesAnswers)
+
 
 
 module.exports = router;
