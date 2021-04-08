@@ -6,20 +6,25 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "pro": "cross-env NODE_ENV=production node app",
-    "dev": "nodemon app"
+    "dev": "cross-env NODE_ENV=dev node app"
   },
   "author": "sswq",
   "license": "ISC",
   "dependencies": {
+    "jsonwebtoken": "^8.5.1",
     "koa": "2.13.0",
+    "koa-body": "^4.2.0",
     "koa-bodyparser": "^4.3.0",
     "koa-json-error": "^3.1.2",
+    "koa-jwt": "^4.0.0",
     "koa-parameter": "^3.0.1",
+    "koa-static": "^5.0.0",
     "koa-router": "^9.1.0",
     "mongoose": "^5.9.27"
   },
   "devDependencies": {
     "cross-env": "^7.0.2",
+    "eslint": "^7.19.0",
     "nodemon": "^2.0.4"
   }
 }
