@@ -274,7 +274,7 @@ class UserCtl{
 
 
     /**
-     * @description 获取用户下的点赞的答案列表
+     * @description 获取用户下的收藏的答案列表
      * @param {*} ctx
      */
      async listfavoriteAnswers(ctx){
