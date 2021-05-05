@@ -7,7 +7,10 @@ const commentSchema = new Schema({
     content:{type:String,required:true},
     commentator:{type:Schema.Types.ObjectId, ref: 'User', select:false},
     questionId:{type:String,required:true},
-    answerId:{type:String,required:true}
-});
+    rootCommentId:{type:String,required:false,select:false},
+    replyTo:{type:Schema.Types.ObjectId,ref:'User',select:false},
+    answerId:{type:String,required:true},
+
+},{timestamps:true});
 
 module.exports = model('Comments', commentSchema);

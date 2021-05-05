@@ -8,6 +8,6 @@ const answerSchema = new Schema({
     answerer:{type:Schema.Types.ObjectId, ref: 'User', select:false},
     questionId:{type:String,select:true},
     voteCount:{type:Number,required:true,default:0}
-});
+},{timestamps:true});
 
 module.exports = model('Answer', answerSchema);

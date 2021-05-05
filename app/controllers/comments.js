@@ -11,14 +11,14 @@ class CommentsCtl {
         const { per_page = 10, page = 1 } = ctx.query;
         const count = Math.max(per_page * 1, 1);
         const skipCount = (Math.max(page * 1, 1) - 1) * count;
-        const {q} = ctx.query;
+        const {q, rootCommentId} = ctx.query;
         const {questionId,answerId} = ctx.params;
         const Q = new RegExp(q);
         ctx.body = await Comments
-            .find({ content: Q,questionId,answerId })
+            .find({ content: Q,questionId,answerId,rootCommentId })
             .limit(count)
             .skip(skipCount)
-            .populate('commentator');
+            .populate('commentator replyTo');
     }
 
     /**
@@ -61,7 +61,9 @@ class CommentsCtl {
      */
     async create(ctx) {
         ctx.verifyParams({
-            content: { type: 'string', required: true }
+            content: { type: 'string', required: true },
+            rootCommentId: {type: 'string', required: false},
+            replyTo: {type:'string', required :false}
         })
 
         const comment = await new Comments(
@@ -84,7 +86,8 @@ class CommentsCtl {
         ctx.verifyParams({
             content: { type: 'string', required: false }
         })
-        const comment = await ctx.state.comment.update(ctx.request.body); // 利用缓存,减少查询
+        const {content} = ctx.request.body; //  只允许更新内容
+        const comment = await ctx.state.comment.update({content}); // 利用缓存,减少查询
         if (!comment) {
             ctx.throw(404, '评论不存在');
         }
