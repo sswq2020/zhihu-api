@@ -8,10 +8,10 @@ const path = require('path');
 const routing = require('./routes')
 const mongoose = require('mongoose')
 const {connectionStr} = require('./config')
- 
+
 
 mongoose.connect(connectionStr,{ useUnifiedTopology: true },()=>{
-    console.log('连接成功')
+    console.log('连接成功了')
 })
 
 mongoose.connection.on('error',console.error)
